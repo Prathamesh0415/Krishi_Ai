@@ -1,8 +1,32 @@
 "use client"
-
-import Header1 from "@/components/mvpblocks/header-1"
+import { signIn } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 export default function Page() {
+
+    const [password, setPassword ] = useState("")
+    const [name, setName] = useState("")
+    const [email, setEmail] = useState("")
+    const router = useRouter()
+
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault()
+
+        const result = await signIn("credentials", {
+            name,
+            email,
+            password,
+            mode: "signup"
+        })
+        
+        if(result?.ok){
+            router.push("/dashboard")
+        }else{
+            alert("Invalid Credentials")
+        }
+    }
+
     return (<>
         <main className="w-full h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-br from-green-700 via-emerald-800 to-green-900">
             {/* Background pattern overlay */}
@@ -17,28 +41,19 @@ export default function Page() {
                     </div>
                 </div>
                 <form
-                    onSubmit={(e) => e.preventDefault()}
+                    onSubmit={handleLogin}
                     className="space-y-5"
                 >
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
                         <div>
                             <label className="font-medium text-white">
-                                First Name
+                                Name
                             </label>
                             <input
                                 type="text"
                                 required
                                 className="w-full mt-2 px-3 py-2 text-gray-800 bg-white outline-none border border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 shadow-sm rounded-lg transition duration-150"
-                            />
-                        </div>
-                        <div>
-                            <label className="font-medium text-white">
-                                Last Name
-                            </label>
-                            <input
-                                type="text"
-                                required
-                                className="w-full mt-2 px-3 py-2 text-gray-800 bg-white outline-none border border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 shadow-sm rounded-lg transition duration-150"
+                                onChange = {(e) => setName(e.target.value)}
                             />
                         </div>
                     </div>
@@ -50,6 +65,7 @@ export default function Page() {
                             type="email"
                             required
                             className="w-full mt-2 px-3 py-2 text-gray-800 bg-white outline-none border border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 shadow-sm rounded-lg transition duration-150"
+                            onChange = {(e) => setEmail(e.target.value)}
                         />
                     </div>
                     <div>
@@ -62,6 +78,7 @@ export default function Page() {
                             type="password"
                             required
                             className="w-full mt-2 px-3 py-2 text-gray-800 bg-white outline-none border border-emerald-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 shadow-sm rounded-lg transition duration-150"
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
                     <div>
@@ -90,7 +107,9 @@ export default function Page() {
                     </div>
                 </div>
                 
-                <button className="w-full flex items-center justify-center gap-x-3 py-2.5 border border-emerald-400/30 bg-white/10 backdrop-blur-sm rounded-lg text-sm font-medium text-white hover:bg-white/20 duration-150 active:bg-white/5 transition-all">
+                <button className="w-full flex items-center justify-center gap-x-3 py-2.5 border border-emerald-400/30 bg-white/10 backdrop-blur-sm rounded-lg text-sm font-medium text-white hover:bg-white/20 duration-150 active:bg-white/5 transition-all"
+                    onClick = {() => signIn("google")}
+                >
                     <svg className="w-5 h-5" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_17_40)">
                             <path d="M47.532 24.5528C47.532 22.9214 47.3997 21.2811 47.1175 19.6761H24.48V28.9181H37.4434C36.9055 31.8988 35.177 34.5356 32.6461 36.2111V42.2078H40.3801C44.9217 38.0278 47.532 31.8547 47.532 24.5528Z" fill="#4285F4" />
