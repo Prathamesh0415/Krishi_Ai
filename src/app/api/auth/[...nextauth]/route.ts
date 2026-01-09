@@ -61,22 +61,29 @@ export const authOptions: AuthOptions = {
             }
         })  
     ],
+    session:{
+        strategy: "jwt"
+    },
     callbacks: {
         async signIn({ user, account }){
-            await connectDB()
-
-            if (account?.provider === "google"){
-                const existingUser = await User.findOne({ email: user.email });
-                if(!existingUser){
-                    await User.create({
-                        name: user.name,
-                        email: user.email,
-                        image: user.image
-                    })
+            try {
+                await connectDB();
+                if (account?.provider === "google") {
+                    const existingUser = await User.findOne({ email: user.email });
+                    if (!existingUser) {
+                        await User.create({
+                            name: user.name,
+                            email: user.email,
+                            image: user.image
+                        });
+                    }
+                    //console.log(existingUser)
                 }
+                return true;
+            } catch (error) {
+                console.error("Error checking for user: ", error);
+                return false;
             }
-
-            return true
             
         },
         async session({ session }) {
@@ -91,7 +98,7 @@ export const authOptions: AuthOptions = {
         pages: {
             signIn: "/login"
         },
-        secret: process.env.NEXT_AUTH_SECRET
+        secret: process.env.NEXTAUTH_SECRET
 };
 
 const handler = NextAuth(authOptions)

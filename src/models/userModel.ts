@@ -13,11 +13,14 @@ const userSchema = new Schema<IUser>({
     password: {
         type: String,
     },
+    image:{
+        type: String
+    },
     createdAt: {
         type:Date,
-        default: Date.now()
+        default: Date.now
     }
 })
 
-const User = models.User || model<IUser>("user", userSchema)
+const User = models.user || model<IUser>("user", userSchema)
 export default User
