@@ -1,10 +1,11 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Model } from "mongoose";
+import { ChatDocument } from "@/types/chat";
 
 const MessageSchema = new Schema(
   {
     role: {
       type: String,
-      enum: ["user", "bot"],
+      enum: ["user", "assistant"],
       required: true,
     },
     content: {
@@ -15,16 +16,21 @@ const MessageSchema = new Schema(
   { _id: false }
 );
 
-const ChatSchema = new Schema(
+const ChatSchema = new Schema<ChatDocument>(
   {
     sessionId: {
       type: String,
       required: true,
       index: true,
     },
-    messages: [MessageSchema],
+    messages: {
+      type: [MessageSchema],
+      default: [],
+    },
   },
   { timestamps: true }
 );
 
-export const Chat =  mongoose.models.Chat || mongoose.model("Chat", ChatSchema)
+export const Chat: Model<ChatDocument> =
+  mongoose.models.Chat ||
+  mongoose.model<ChatDocument>("Chat", ChatSchema);

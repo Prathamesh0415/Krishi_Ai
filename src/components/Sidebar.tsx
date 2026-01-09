@@ -6,7 +6,8 @@ import {
   Sprout, 
   LineChart, 
   Stethoscope, 
-  LogOut 
+  LogOut,
+  History
 } from "lucide-react"; // install lucide-react for icons
 import { signOut } from "next-auth/react";
 
@@ -15,6 +16,7 @@ const menuItems = [
   { name: "Krishi Mitr", href: "/krishi-mitr", icon: Sprout },
   { name: "Analysis", href: "/analysis", icon: LineChart },
   { name: "Disease Predictor", href: "/disease-predictor", icon: Stethoscope },
+  { name: "Chat History", href: "/chat-history", icon: History}
 ];
 
 export default function Sidebar() {
