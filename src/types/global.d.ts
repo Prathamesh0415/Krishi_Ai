@@ -12,10 +12,11 @@ declare global {
 
     export interface IPost extends Document {
         _id: string,
-        userId: string,
-        category: enum,
+        //userId: string,
+        //category: enum,
         title: string,
-        description: string,
+        content: string,
+        authorId: string
         createdAt: Date
     } 
 }
