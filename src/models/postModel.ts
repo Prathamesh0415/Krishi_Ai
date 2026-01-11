@@ -2,7 +2,7 @@ import mongoose, { model, models, Schema} from "mongoose"
 
 const postSchema = new Schema({
     title: {
-        title: String,
+        type: String,
         required: true,
     },
     content: {

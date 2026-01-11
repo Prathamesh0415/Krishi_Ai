@@ -65,36 +65,43 @@ export const authOptions: AuthOptions = {
         strategy: "jwt"
     },
     callbacks: {
-        async signIn({ user, account }){
+        async signIn({ user, account }) {
             try {
                 await connectDB();
-                if (account?.provider === "google") {
-                    const existingUser = await User.findOne({ email: user.email });
-                    if (!existingUser) {
-                        await User.create({
-                            name: user.name,
-                            email: user.email,
-                            image: user.image
-                        });
-                    }
-                    //console.log(existingUser)
-                }
-                return true;
-            } catch (error) {
-                console.error("Error checking for user: ", error);
-                return false;
-            }
-            
-        },
-        async session({ session }) {
-            await connectDB();
-            const dbUser = await User.findOne({ email: session.user?.email })
-            if(dbUser){
-                (session.user as any).id = dbUser._id.toString();
+
+            if (account?.provider === "google") {
+                let existingUser = await User.findOne({ email: user.email });
+
+                if (!existingUser) {
+                    existingUser = await User.create({
+                        name: user.name,
+                        email: user.email,
+                        image: user.image
+                });}
+                user.id = existingUser._id.toString();
             }
 
-            return session
-        }},
+                return true;
+            } catch (error) {
+                console.error("Error checking for user:", error);
+                return false;
+            }
+        },
+
+        async jwt({ token, user }) {
+            if (user) {
+            token.id = user.id;
+            }
+            return token;
+        },
+
+        async session({ session, token }) {
+            if (session.user) {
+            session.user.id = token.id as string;
+            }
+            return session;
+        }
+        },
         pages: {
             signIn: "/login"
         },
