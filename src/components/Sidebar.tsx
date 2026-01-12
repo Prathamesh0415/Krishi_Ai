@@ -11,7 +11,6 @@ import {
   History,
   MessageSquare,
   FileText,
-  User,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -23,8 +22,8 @@ const menuItems = [
   { name: "Analysis", href: "/analysis", icon: LineChart },
   { name: "Disease Predictor", href: "/disease-predictor", icon: Stethoscope },
   { name: "Chat History", href: "/chat-history", icon: History },
-  { name: "Forum", href: "/posts", icon: MessageSquare }, // Updated icon/name suggestion
-  { name: "My Posts", href: "/my-posts", icon: FileText }, // Updated icon/name suggestion
+  { name: "Forum", href: "/posts", icon: MessageSquare },
+  { name: "My Posts", href: "/my-posts", icon: FileText },
 ];
 
 export default function Sidebar() {
@@ -37,43 +36,42 @@ export default function Sidebar() {
         isCollapsed ? "w-20" : "w-64"
       }`}
     >
-      {/* Logo Section */}
-      <div className="flex items-center justify-between h-20 border-b border-emerald-800 px-4">
+      {/* --- HEADER SECTION --- */}
+      <div 
+        className={`flex items-center h-20 border-b border-emerald-800 transition-all duration-300 ${
+          isCollapsed ? "justify-center" : "justify-between px-4"
+        }`}
+      >
+        {/* Logo - Only visible when expanded */}
         {!isCollapsed && (
-          <h1 className="text-2xl font-bold flex items-center gap-2 whitespace-nowrap overflow-hidden">
-            <Sprout className="h-8 w-8 text-emerald-400" />
-            <span>KrishiApp</span>
-          </h1>
+          <div className="flex items-center gap-2 overflow-hidden">
+            <Sprout className="h-8 w-8 text-emerald-400 flex-shrink-0" />
+            <span className="text-2xl font-bold whitespace-nowrap">KrishiApp</span>
+          </div>
         )}
-        {/* If collapsed, just show the logo icon centered */}
-        {isCollapsed && (
-            <div className="w-full flex justify-center">
-                 <Sprout className="h-8 w-8 text-emerald-400" />
-            </div>
-        )}
-        
-        {/* Toggle Button */}
+
+        {/* Toggle Button - Always visible inside the header */}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className={`p-1.5 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-emerald-100 transition-colors ${isCollapsed ? "absolute -right-3 top-8 shadow-md border border-emerald-700 rounded-full" : ""}`}
+          className="p-2 rounded-lg bg-emerald-800 hover:bg-emerald-700 text-emerald-100 transition-colors"
         >
           {isCollapsed ? (
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-6 w-6" />
           ) : (
-            <ChevronLeft className="h-5 w-5" />
+            <ChevronLeft className="h-6 w-6" />
           )}
         </button>
       </div>
 
-      {/* Navigation Links */}
-      <nav className="flex-1 px-3 py-6 space-y-2">
+      {/* --- NAVIGATION LINKS --- */}
+      <nav className="flex-1 px-3 py-6 space-y-2 overflow-y-auto overflow-x-hidden">
         {menuItems.map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link
               key={item.href}
               href={item.href}
-              title={isCollapsed ? item.name : ""} // Tooltip on hover when collapsed
+              title={isCollapsed ? item.name : ""}
               className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all duration-200 group ${
                 isActive
                   ? "bg-emerald-600 text-white shadow-md"
@@ -95,13 +93,13 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* User Profile / Logout Section */}
+      {/* --- FOOTER / LOGOUT --- */}
       <div className="p-4 border-t border-emerald-800">
         <button
           onClick={() => signOut({ callbackUrl: "/login" })}
           title={isCollapsed ? "Log Out" : ""}
           className={`flex w-full items-center gap-3 px-3 py-3 text-emerald-200 hover:bg-emerald-800 hover:text-white rounded-lg transition-colors ${
-             isCollapsed ? "justify-center" : ""
+            isCollapsed ? "justify-center" : ""
           }`}
         >
           <LogOut className="flex-shrink-0 h-6 w-6" />
