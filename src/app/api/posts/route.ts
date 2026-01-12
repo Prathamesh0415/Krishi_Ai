@@ -1,7 +1,8 @@
 import { getUserFromRequest } from "@/lib/auth";
 import connectDb from "@/lib/connectDB";
 import { Post } from "@/models/postModel";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import User from "@/models/userModel";
 
 export async function POST(req: Request) {
   try{
@@ -31,15 +32,27 @@ export async function POST(req: Request) {
     
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try{
     await connectDb();
 
-    const posts = await Post.find()
+    const user = await getUserFromRequest();
+    const { searchParams } = new URL(req.url);
+
+    let filter: any = {};
+
+    if (searchParams.get("author") === "me") {
+        if (!user) {
+        return new Response("Unauthorized", { status: 401 });
+        }
+        filter.authorId = user.userId;
+    }
+
+    const posts = await Post.find(filter)
         .sort({ createdAt: -1 })
         .populate("authorId", "name image");
 
-    return NextResponse.json(posts);
+    return Response.json(posts);
   }catch(error){
     console.log(error)
     return NextResponse.json({

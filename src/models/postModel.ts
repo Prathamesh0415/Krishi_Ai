@@ -9,9 +9,12 @@ const postSchema = new Schema({
         type: String,
         required: true
     },
+    image:{
+        type: String
+    },
     authorId: {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: "user",
         required: true
     }
 }, {timestamps: true})
