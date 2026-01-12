@@ -35,7 +35,7 @@ export default function ForumPage() {
             Community Forum
           </h1>
           <Link
-            href="/forum/create"
+            href="/posts/create"
             className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-colors shadow-sm"
           >
             + Ask a Question
@@ -49,7 +49,7 @@ export default function ForumPage() {
             {posts.map((post) => (
               <Link
                 key={post._id}
-                href={`/forum/${post._id}`}
+                href={`/posts/${post._id}`}
                 className="block bg-white p-6 rounded-xl shadow-sm border border-emerald-100 hover:shadow-md transition-shadow"
               >
                 <h2 className="text-xl font-semibold text-gray-800 mb-2">

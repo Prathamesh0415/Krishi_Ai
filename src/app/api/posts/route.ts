@@ -2,38 +2,37 @@ import { getUserFromRequest } from "@/lib/auth";
 import connectDb from "@/lib/connectDB";
 import { Post } from "@/models/postModel";
 import { NextRequest, NextResponse } from "next/server";
-import User from "@/models/userModel";
+import User from "@/models/userModel"; // Keeps Schema registered
 
 export async function POST(req: Request) {
-  try{
+  try {
     await connectDb();
 
     const user = await getUserFromRequest();
     if (!user) {
-        return new Response("Unauthorized", { status: 401 });
+      return new Response("Unauthorized", { status: 401 });
     }
 
     const { title, content } = await req.json();
 
     const post = await Post.create({
-        title,
-        content,
-        authorId: user.userId
+      title,
+      content,
+      authorId: user.userId
     });
 
     return NextResponse.json(post, { status: 201 });
-  }catch(error){
-    console.log(error)
+  } catch (error) {
+    console.log(error);
     return NextResponse.json({
-        success: false,
-        message: "internal server error"
-    }, {status: 500})
+      success: false,
+      message: "internal server error"
+    }, { status: 500 });
   }
-    
 }
 
 export async function GET(req: NextRequest) {
-  try{
+  try {
     await connectDb();
 
     const user = await getUserFromRequest();
@@ -42,22 +41,22 @@ export async function GET(req: NextRequest) {
     let filter: any = {};
 
     if (searchParams.get("author") === "me") {
-        if (!user) {
+      if (!user) {
         return new Response("Unauthorized", { status: 401 });
-        }
-        filter.authorId = user.userId;
+      }
+      filter.authorId = user.userId;
     }
 
     const posts = await Post.find(filter)
-        .sort({ createdAt: -1 })
-        .populate("authorId", "name image");
+      .sort({ createdAt: -1 })
+      .populate("authorId", "name image"); // Requires 'User' model to be registered
 
-    return Response.json(posts);
-  }catch(error){
-    console.log(error)
+    return NextResponse.json(posts); // consistent use of NextResponse
+  } catch (error) {
+    console.log(error);
     return NextResponse.json({
-        success: false,
-        message: "internal server error"
-    }, { status: 500 })
-}}
-
+      success: false,
+      message: "internal server error"
+    }, { status: 500 });
+  }
+}

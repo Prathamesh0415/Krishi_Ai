@@ -1,6 +1,7 @@
-import  connectDb  from "@/lib/connectDB";
+import connectDb from "@/lib/connectDB";
 import { Comment } from "@/models/Comments";
 import { NextResponse } from "next/server";
+import User from "@/models/userModel"; // Kept to ensure Schema is registered
 
 function buildCommentTree(comments: any[]) {
   const map = new Map<string, any>();
@@ -24,12 +25,17 @@ function buildCommentTree(comments: any[]) {
 
 export async function GET(
   req: Request,
-  { params }: { params: { postId: string } }
+  // Next.js 15: params is a Promise
+  { params }: { params: Promise<{ postId: string }> }
 ) {
   try {
     await connectDb();
 
-    const comments = await Comment.find({ postId: params.postId })
+    // 1. Await the params object
+    const { postId } = await params;
+
+    // 2. FIX: Pass an object { postId: value }, not just the string
+    const comments = await Comment.find({ postId: postId })
       .sort({ createdAt: 1 })
       .populate("authorId", "name image")
       .lean();

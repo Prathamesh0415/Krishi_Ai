@@ -43,7 +43,7 @@ export default function MyPostsPage() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <Link 
-              href="/forum" 
+              href="/posts" 
               className="text-emerald-600 hover:text-emerald-800 text-sm font-medium mb-2 inline-block"
             >
               ← Back to Community
@@ -53,7 +53,7 @@ export default function MyPostsPage() {
             </h1>
           </div>
           <Link
-            href="/forum/create"
+            href="/psots/create"
             className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-2 rounded-lg font-medium transition-colors shadow-sm"
           >
             + New Query
@@ -75,7 +75,7 @@ export default function MyPostsPage() {
               posts.map((post) => (
                 <Link
                   key={post._id}
-                  href={`/forum/${post._id}`}
+                  href={`/posts/${post._id}`}
                   className="block bg-white p-6 rounded-xl shadow-sm border border-emerald-100 hover:shadow-md transition-shadow relative"
                 >
                   <div className="absolute top-6 right-6 text-xs font-bold text-emerald-100 bg-emerald-600 px-2 py-1 rounded">

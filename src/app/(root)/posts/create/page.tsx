@@ -15,7 +15,7 @@ export default function CreatePostPage() {
         method: "POST",
         body: JSON.stringify(formData),
       });
-      if (res.ok) router.push("/forum");
+      if (res.ok) router.push("/posts");
     } catch (error) {
       console.error(error);
     } finally {

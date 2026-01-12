@@ -1,7 +1,8 @@
-import  connectDb  from "@/lib/connectDB";
+import connectDb from "@/lib/connectDB";
 import { Comment } from "@/models/Comments";
 import { getUserFromRequest } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
+import User from "@/models/userModel"; // <--- Essential to register the User schema
 
 export async function POST(req: NextRequest) {
     try{
@@ -29,5 +30,4 @@ export async function POST(req: NextRequest) {
             message: "Internal server error"
         }, {status: 500})
     }
-    
 }
