@@ -37,7 +37,8 @@ export default function CreatePostPage() {
             <input
               type="text"
               required
-              className="w-full p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+              // Added 'text-gray-900' for dark text and 'placeholder:text-gray-400'
+              className="w-full p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-gray-900 placeholder:text-gray-400"
               placeholder="e.g., How to treat yellow leaves on tomato plants?"
               value={formData.title}
               onChange={(e) =>
@@ -52,7 +53,8 @@ export default function CreatePostPage() {
             <textarea
               required
               rows={6}
-              className="w-full p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none"
+              // Added 'text-gray-900' for dark text and 'placeholder:text-gray-400'
+              className="w-full p-3 border border-emerald-200 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none text-gray-900 placeholder:text-gray-400"
               placeholder="Describe your issue in detail..."
               value={formData.content}
               onChange={(e) =>

@@ -71,12 +71,13 @@ const CommentItem = ({
               type="text"
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
-              className="flex-1 border p-1 text-sm rounded"
+              // UPDATED: Added text-gray-900 and placeholder styling
+              className="flex-1 border border-gray-300 p-2 text-sm rounded text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-emerald-500"
               placeholder="Write a reply..."
             />
             <button
               onClick={handleReply}
-              className="bg-emerald-600 text-white text-xs px-3 py-1 rounded"
+              className="bg-emerald-600 text-white text-xs px-3 py-1 rounded hover:bg-emerald-700 transition-colors"
             >
               Send
             </button>
@@ -133,7 +134,7 @@ export default function PostDetailsPage() {
     fetchData(); // Refresh comments
   };
 
-  if (!post) return <div className="p-10 text-center">Loading...</div>;
+  if (!post) return <div className="p-10 text-center text-emerald-600">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-emerald-50 p-6">
@@ -167,12 +168,13 @@ export default function PostDetailsPage() {
               type="text"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              className="flex-1 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 outline-none"
+              // UPDATED: Added text-gray-900 and placeholder styling
+              className="flex-1 border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-emerald-500 outline-none text-gray-900 placeholder:text-gray-400"
               placeholder="Add to the discussion..."
             />
             <button
               onClick={handleTopLevelComment}
-              className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700"
+              className="bg-emerald-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-emerald-700 transition-colors"
             >
               Post
             </button>

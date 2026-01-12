@@ -180,7 +180,8 @@ export default function CropRecommender() {
                     type="text" 
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+                    // Added 'text-gray-900' here to make the typed text dark and visible
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all text-gray-900 placeholder:text-gray-400"
                     placeholder="e.g. Delhi, Mumbai"
                   />
                 </div>
