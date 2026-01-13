@@ -9,7 +9,7 @@ import {
   ThermometerSun, 
   Droplets, 
   CloudRain, 
-  FlaskConical, 
+  //FlaskConical, 
   ArrowRight,
   Loader2,
   CheckCircle2,
@@ -266,8 +266,8 @@ export default function CropRecommender() {
                   <CheckCircle2 className="w-5 h-5" /> Why this crop?
                 </h3>
                 <p className="text-emerald-800/80">
-                  Based on your soil's NPK values ({formData.n}, {formData.p}, {formData.k}) 
-                  and the current weather conditions in {location}, 
+                  {`Based on your soil's NPK values (${formData.n}, ${formData.p}, ${formData.k}) 
+                  and the current weather conditions in ${location},`} 
                   <span className="font-bold capitalize"> {prediction}</span> is the optimal choice for maximum yield.
                 </p>
               </div>

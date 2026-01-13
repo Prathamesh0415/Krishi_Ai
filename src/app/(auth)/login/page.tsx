@@ -87,7 +87,7 @@ export default function Page() {
 </button>
                 
                 <p className="text-center text-emerald-100">
-                    Don't have an account? 
+                    {"Don't have an account?"} 
                     <a href="/signup" className="font-medium text-emerald-300 hover:text-white ml-1 transition duration-150">
                         Sign up
                     </a>
