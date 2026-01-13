@@ -4,12 +4,14 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   req: Request,
-  { params }: { params: { postId: string } }
+  { params }: { params: Promise<{ postId: string }> }
 ) {
     try{
         await connectDb();
 
-        const post = await Post.findById(params.postId)
+        const postId = await params
+
+        const post = await Post.findById(postId)
             .populate("authorId", "name image");
 
         if (!post) {

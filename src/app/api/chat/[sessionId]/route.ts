@@ -3,12 +3,14 @@ import  connectDb  from "@/lib/connectDB";
 import { Chat } from "@/models/Chat";
 export async function GET(
   _: Request,
-  { params }: { params: { sessionId: string } }
+  { params }: { params: Promise<{ sessionId: string }> }
 ) {
   try {
     await connectDb();
 
-    const chat = await Chat.findOne({ sessionId: params.sessionId }).lean();
+    const { sessionId } = await params
+
+    const chat = await Chat.findOne({ sessionId }).lean();
 
     if (!chat) {
       return NextResponse.json(
