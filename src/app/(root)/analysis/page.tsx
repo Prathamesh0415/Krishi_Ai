@@ -57,7 +57,7 @@ export default function CropRecommender() {
 
     try {
       // Note: Added query param for location
-      const res = await fetch(`http://127.0.0.1:8000/extract?location=${location}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/extract?location=${location}`, {
         method: "POST",
         body: uploadData,
       });
@@ -109,7 +109,7 @@ export default function CropRecommender() {
         throw new Error("Please ensure all fields are valid numbers.");
       }
 
-      const res = await fetch("http://127.0.0.1:8000/predict", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/predict`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
