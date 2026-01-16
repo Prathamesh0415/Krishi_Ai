@@ -6,6 +6,7 @@ const client = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
 })
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function askLLM(messages: any[]) {
   const response = await client.chat.completions.create({
     model: "gpt-4o-mini",

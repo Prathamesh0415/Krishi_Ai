@@ -120,8 +120,12 @@ export default function CropRecommender() {
       const data = await res.json();
       setPrediction(data.crop);
       setStep("result");
-    } catch (err: any) {
-      setError(err.message || "Failed to generate prediction.");
+    } catch (err: unknown) { // 1. Change 'any' to 'unknown'
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Failed to generate prediction.");
+      }
     } finally {
       setLoading(false);
     }
@@ -287,6 +291,7 @@ export default function CropRecommender() {
 }
 
 // Sub-component for inputs to keep code clean
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function InputGroup({ label, name, val, onChange, icon, Icon }: any) {
   return (
     <div>

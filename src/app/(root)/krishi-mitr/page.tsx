@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react"; // 1. Import Suspense
 import { Send, Sprout, User, Loader2, RefreshCw, History } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -10,7 +10,8 @@ type Message = {
   content: string;
 };
 
-export default function KrishiMitrChat() {
+// 2. Rename your main logic component (remove 'export default')
+function ChatContent() {
   // Navigation hooks
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -38,31 +39,30 @@ export default function KrishiMitrChat() {
   }, [messages, isHistoryLoading]);
 
   // ---------------------------------------------------------
-  // 1. LOAD HISTORY IF SESSION ID EXISTS IN URL
+  // LOAD HISTORY IF SESSION ID EXISTS IN URL
   // ---------------------------------------------------------
   useEffect(() => {
     const loadChatHistory = async () => {
-      // FIX: If we already have this session ID in state (meaning we just created it),
-      // don't re-fetch from the API. Only fetch if it's a fresh page load.
       if (!urlSessionId || urlSessionId === sessionId) return;
 
       setIsHistoryLoading(true);
-      setSessionId(urlSessionId); 
+      setSessionId(urlSessionId);
 
       try {
         const res = await fetch(`/api/chat/${urlSessionId}`);
-        
+
         if (!res.ok) {
-            if(res.status === 404) console.warn("Chat not found");
-            return;
+          if (res.status === 404) console.warn("Chat not found");
+          return;
         }
 
         const data = await res.json();
 
         if (data && data.messages && Array.isArray(data.messages)) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const cleanMessages = data.messages.map((msg: any) => ({
             role: msg.role,
-            content: msg.content
+            content: msg.content,
           }));
           setMessages(cleanMessages);
         }
@@ -74,19 +74,20 @@ export default function KrishiMitrChat() {
     };
 
     loadChatHistory();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlSessionId]); 
-
-  // ---------------------------------------------------------
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlSessionId]);
 
   const handleSendMessage = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!input.trim() || isLoading) return;
 
     const userMessage = input.trim();
-    setInput(""); 
+    setInput("");
 
-    const newMessages = [...messages, { role: "user", content: userMessage } as Message];
+    const newMessages = [
+      ...messages,
+      { role: "user", content: userMessage } as Message,
+    ];
     setMessages(newMessages);
     setIsLoading(true);
 
@@ -96,7 +97,7 @@ export default function KrishiMitrChat() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: userMessage,
-          sessionId: sessionId, 
+          sessionId: sessionId,
         }),
       });
 
@@ -105,14 +106,18 @@ export default function KrishiMitrChat() {
 
       if (data.sessionId && data.sessionId !== sessionId) {
         setSessionId(data.sessionId);
-        // This updates the URL, but thanks to the fix in useEffect, it won't trigger 'History Mode' re-fetch
-        router.replace(`/krishi-mitr?sessionId=${data.sessionId}`, { scroll: false });
+        router.replace(`/krishi-mitr?sessionId=${data.sessionId}`, {
+          scroll: false,
+        });
       }
 
       setMessages((prev) => [...prev, { role: "bot", content: data.reply }]);
     } catch (error) {
       console.error(error);
-      setMessages((prev) => [...prev, { role: "bot", content: "⚠️ Sorry, connection error." }]);
+      setMessages((prev) => [
+        ...prev,
+        { role: "bot", content: "⚠️ Sorry, connection error." },
+      ]);
     } finally {
       setIsLoading(false);
     }
@@ -126,7 +131,6 @@ export default function KrishiMitrChat() {
 
   return (
     <div className="flex flex-col h-[calc(100vh-4rem)] max-w-4xl mx-auto bg-white shadow-xl rounded-xl overflow-hidden border border-gray-100 relative">
-      
       {/* Header */}
       <div className="bg-emerald-700 p-4 flex items-center justify-between text-white shadow-md z-10">
         <div className="flex items-center gap-3">
@@ -136,88 +140,97 @@ export default function KrishiMitrChat() {
           <div>
             <h2 className="font-bold text-lg flex items-center gap-2">
               Krishi Mitr AI
-              {/* REMOVED THE HISTORY MODE LABEL HERE */}
             </h2>
-            <p className="text-xs text-emerald-200">Your Personal Farming Assistant</p>
+            <p className="text-xs text-emerald-200">
+              Your Personal Farming Assistant
+            </p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-            <button 
-                onClick={() => router.push('/chat-history')}
-                className="p-2 hover:bg-white/10 rounded-full transition-colors text-emerald-200 hover:text-white"
-                title="View History"
-            >
-                <History className="w-5 h-5" />
-            </button>
-            <button 
-                onClick={handleClearChat}
-                className="p-2 hover:bg-white/10 rounded-full transition-colors text-emerald-200 hover:text-white"
-                title="New Chat"
-            >
-                <RefreshCw className="w-5 h-5" />
-            </button>
+          <button
+            onClick={() => router.push("/chat-history")}
+            className="p-2 hover:bg-white/10 rounded-full transition-colors text-emerald-200 hover:text-white"
+            title="View History"
+          >
+            <History className="w-5 h-5" />
+          </button>
+          <button
+            onClick={handleClearChat}
+            className="p-2 hover:bg-white/10 rounded-full transition-colors text-emerald-200 hover:text-white"
+            title="New Chat"
+          >
+            <RefreshCw className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-gray-50 scrollbar-thin scrollbar-thumb-emerald-200 scrollbar-track-transparent">
-        
         {isHistoryLoading ? (
-            <div className="flex flex-col items-center justify-center h-full space-y-3 opacity-60">
-                <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
-                <p className="text-sm text-emerald-800">Retrieving conversation history...</p>
-            </div>
+          <div className="flex flex-col items-center justify-center h-full space-y-3 opacity-60">
+            <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
+            <p className="text-sm text-emerald-800">
+              Retrieving conversation history...
+            </p>
+          </div>
         ) : (
-            <>
-                {messages.map((msg, index) => (
+          <>
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`flex items-start gap-3 ${
+                  msg.role === "user" ? "flex-row-reverse" : "flex-row"
+                }`}
+              >
                 <div
-                    key={index}
-                    className={`flex items-start gap-3 ${
-                    msg.role === "user" ? "flex-row-reverse" : "flex-row"
-                    }`}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                    msg.role === "user"
+                      ? "bg-emerald-600 text-white"
+                      : "bg-white border border-gray-200 text-emerald-600"
+                  }`}
                 >
-                    <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                        msg.role === "user"
-                        ? "bg-emerald-600 text-white"
-                        : "bg-white border border-gray-200 text-emerald-600"
-                    }`}
-                    >
-                    {msg.role === "user" ? <User size={16} /> : <Sprout size={16} />}
-                    </div>
+                  {msg.role === "user" ? (
+                    <User size={16} />
+                  ) : (
+                    <Sprout size={16} />
+                  )}
+                </div>
 
-                    <div
-                    className={`max-w-[80%] rounded-2xl px-5 py-3 shadow-sm text-sm leading-relaxed ${
-                        msg.role === "user"
-                        ? "bg-emerald-600 text-white rounded-br-none"
-                        : "bg-white border border-gray-100 text-gray-800 rounded-bl-none"
-                    }`}
-                    >
-                    {msg.role !== "bot" ? (
-                        <div className="prose prose-sm prose-emerald max-w-none">
-                        <ReactMarkdown>{msg.content}</ReactMarkdown>
-                        </div>
-                    ) : (
-                        <p>{msg.content}</p>
-                    )}
+                <div
+                  className={`max-w-[80%] rounded-2xl px-5 py-3 shadow-sm text-sm leading-relaxed ${
+                    msg.role === "user"
+                      ? "bg-emerald-600 text-white rounded-br-none"
+                      : "bg-white border border-gray-100 text-gray-800 rounded-bl-none"
+                  }`}
+                >
+                  {msg.role !== "bot" ? (
+                    <div className="prose prose-sm prose-emerald max-w-none">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
                     </div>
+                  ) : (
+                    <p>{msg.content}</p>
+                  )}
                 </div>
-                ))}
-                
-                {isLoading && (
-                <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0">
-                    <Sprout size={16} className="text-emerald-600 animate-pulse" />
-                    </div>
-                    <div className="bg-white border border-gray-100 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm flex items-center gap-2">
-                    <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                    <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                    <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></span>
-                    </div>
+              </div>
+            ))}
+
+            {isLoading && (
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center shrink-0">
+                  <Sprout
+                    size={16}
+                    className="text-emerald-600 animate-pulse"
+                  />
                 </div>
-                )}
-                <div ref={messagesEndRef} />
-            </>
+                <div className="bg-white border border-gray-100 px-4 py-3 rounded-2xl rounded-bl-none shadow-sm flex items-center gap-2">
+                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
+                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
+                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></span>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </>
         )}
       </div>
 
@@ -253,5 +266,20 @@ export default function KrishiMitrChat() {
         </form>
       </div>
     </div>
+  );
+}
+
+// 3. Export the Wrapped Component
+export default function KrishiMitrChat() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-screen bg-gray-50">
+          <Loader2 className="w-10 h-10 text-emerald-600 animate-spin" />
+        </div>
+      }
+    >
+      <ChatContent />
+    </Suspense>
   );
 }

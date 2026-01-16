@@ -37,8 +37,8 @@ export async function GET(req: NextRequest) {
 
     const user = await getUserFromRequest();
     const { searchParams } = new URL(req.url);
-
-    let filter: any = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const filter: any = {};
 
     if (searchParams.get("author") === "me") {
       if (!user) {

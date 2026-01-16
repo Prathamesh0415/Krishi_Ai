@@ -8,10 +8,10 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold text-gray-800">Overview</h2>
-          <p className="text-gray-500">Welcome back, Farmer! Here is what's happening today.</p>
+          <p className="text-gray-500">{"Welcome back, Farmer! Here is what's happening today."}</p>
         </div>
         <div className="text-right">
-          <p className="text-sm text-gray-500">Today's Date</p>
+          <p className="text-sm text-gray-500">{"Today's Date"}</p>
           <p className="text-lg font-semibold text-emerald-700">Oct 24, 2025</p>
         </div>
       </div>
@@ -100,6 +100,7 @@ export default function DashboardPage() {
 }
 
 // Simple Helper Component for Stats
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function StatCard({ title, value, sub, icon: Icon, color }: any) {
   return (
     <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">

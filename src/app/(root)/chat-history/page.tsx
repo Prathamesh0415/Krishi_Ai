@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { 
-  Calendar, 
+  //Calendar, 
   MessageSquare, 
   ArrowRight, 
   Sprout, 
@@ -96,7 +96,7 @@ export default function ChatHistoryPage() {
             </div>
             <h3 className="text-xl font-semibold text-gray-800">No History Found</h3>
             <p className="text-gray-500 mt-2 max-w-sm">
-              You haven't had any conversations with Krishi Mitr yet. Start a chat to get advice on your crops!
+              {"You haven't had any conversations with Krishi Mitr yet. Start a chat to get advice on your crops!"}
             </p>
           </div>
         ) : (

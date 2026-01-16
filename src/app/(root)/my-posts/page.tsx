@@ -66,7 +66,7 @@ export default function MyPostsPage() {
           <div className="space-y-4">
             {posts.length === 0 ? (
               <div className="text-center py-10 bg-white rounded-xl border border-dashed border-emerald-200">
-                <p className="text-gray-500 mb-4">You haven't asked anything yet.</p>
+                <p className="text-gray-500 mb-4">{"You haven't asked anything yet."}</p>
                 <Link href="/forum/create" className="text-emerald-600 font-semibold hover:underline">
                   Ask your first question
                 </Link>

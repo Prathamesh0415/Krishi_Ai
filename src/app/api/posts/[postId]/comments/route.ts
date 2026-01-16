@@ -3,8 +3,11 @@ import { Comment } from "@/models/Comments";
 import { NextResponse } from "next/server";
 import User from "@/models/userModel"; // Kept to ensure Schema is registered
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function buildCommentTree(comments: any[]) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const map = new Map<string, any>();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const roots: any[] = [];
 
   comments.forEach((c) => {
