@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     const post = await Post.create({
       title,
       content,
-      authorId: user.userId
+      authorId: user
     });
 
     return NextResponse.json(post, { status: 201 });
@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
       if (!user) {
         return new Response("Unauthorized", { status: 401 });
       }
-      filter.authorId = user.userId;
+      filter.authorId = user;
     }
 
     const posts = await Post.find(filter)

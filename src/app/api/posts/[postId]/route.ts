@@ -9,7 +9,7 @@ export async function GET(
     try{
         await connectDb();
 
-        const postId = await params
+        const { postId } = await params
 
         const post = await Post.findById(postId)
             .populate("authorId", "name image");
