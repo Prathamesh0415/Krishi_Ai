@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import connectDb from "@/lib/connectDB";
 import { Chat } from "@/models/Chat";
 import { ChatMessage, ChatDocument } from "@/types/chat";
+import { getUserFromRequest } from "@/lib/auth";
 
 const MAX_CONTEXT_MESSAGES = 10;
 const CONTEXT_TTL_SECONDS = 60 * 60 * 24;
@@ -12,6 +13,8 @@ const CONTEXT_TTL_SECONDS = 60 * 60 * 24;
 export async function POST(req: Request) {
   try {
     const { message, sessionId } = await req.json();
+
+    const userId = await getUserFromRequest()
 
     if (!message) {
       return NextResponse.json(
@@ -69,6 +72,10 @@ export async function POST(req: Request) {
     await Chat.findOneAndUpdate(
       { sessionId: sid },
       {
+        $setOnInsert:{
+          userId,
+          sessionId: sid
+        },
         $push: {
           messages: {
             $each: [
@@ -78,7 +85,7 @@ export async function POST(req: Request) {
           },
         },
       },
-      { upsert: true }
+      { upsert: true, new: true }
     );
 
     return NextResponse.json({

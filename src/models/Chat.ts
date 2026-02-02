@@ -18,6 +18,11 @@ const MessageSchema = new Schema(
 
 const ChatSchema = new Schema<ChatDocument>(
   {
+    userId:{
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true
+    },
     sessionId: {
       type: String,
       required: true,
@@ -33,4 +38,4 @@ const ChatSchema = new Schema<ChatDocument>(
 
 export const Chat: Model<ChatDocument> =
   mongoose.models.Chat ||
-  mongoose.model<ChatDocument>("Chat", ChatSchema);
+  mongoose.model("Chat", ChatSchema);

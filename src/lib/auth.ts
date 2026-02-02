@@ -9,7 +9,5 @@ export async function getUserFromRequest() {
         return null;
     }
 
-    return {
-        userId: session.user.id
-    };
+    return session.user.id;
 }

@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
             postId,
             content,
             parentCommentId: parentCommentId ?? null,
-            authorId: user.userId
+            authorId: user
         });
 
         return NextResponse.json(comment, { status: 201 });

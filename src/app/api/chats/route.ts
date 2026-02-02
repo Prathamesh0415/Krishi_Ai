@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 import connectDb from "@/lib/connectDB";
 import { Chat } from "@/models/Chat";
+import { getUserFromRequest } from "@/lib/auth";
+//import { getServerSession } from "next-auth";
+//import { authOptions } from "../auth/[...nextauth]/route";
 
 export async function GET() {
   try {
     await connectDb();
 
-    const chats = await Chat.find({})
+    const userId = await getUserFromRequest()
+
+    const chats = await Chat.find({userId})
       .sort({ updatedAt: -1 })
       .select({
         sessionId: 1,
