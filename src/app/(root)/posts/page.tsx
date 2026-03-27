@@ -61,9 +61,9 @@ export default function ForumPage() {
                 <div className="flex items-center text-sm text-gray-500">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-700 font-bold">
-                      {post.authorId.name.charAt(0)}
+                      {post.authorId?.name?.charAt(0) || "U"}
                     </div>
-                    <span>{post.authorId.name}</span>
+                    <span>{post.authorId?.name || "Unknown user"}</span>
                   </div>
                   <span className="mx-2">•</span>
                   <span>{new Date(post.createdAt).toLocaleDateString()}</span>
