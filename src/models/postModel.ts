@@ -14,9 +14,9 @@ const postSchema = new Schema({
     },
     authorId: {
         type: Schema.Types.ObjectId,
-        ref: "user",
+        ref: "User",
         required: true
     }
 }, {timestamps: true})
 
-export const Post = models.post || model<IPost>("post", postSchema)
+export const Post = models.Post || model<IPost>("Post", postSchema)

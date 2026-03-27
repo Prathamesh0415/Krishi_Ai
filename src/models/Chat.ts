@@ -20,7 +20,7 @@ const ChatSchema = new Schema<ChatDocument>(
   {
     userId:{
       type: Schema.Types.ObjectId,
-      ref: "user",
+      ref: "User",
       required: true
     },
     sessionId: {

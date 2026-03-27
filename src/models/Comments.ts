@@ -3,12 +3,12 @@ import mongoose, { models, model, Schema} from "mongoose"
 const commentSchema = new Schema({
     postId: { 
         type: Schema.Types.ObjectId, 
-        ref: "post", 
+        ref: "Post", 
         index: true 
     },
     authorId: { 
         type: Schema.Types.ObjectId, 
-        ref: "user",
+        ref: "User",
         required: true
     },
     content: {
@@ -17,9 +17,9 @@ const commentSchema = new Schema({
     },
     parentCommentId: {
         type: Schema.Types.ObjectId,
-        ref: "comment",
+        ref: "Comment",
         default: null
   }
 }, { timestamps: true })
 
-export const Comment = models.comment || model("comment", commentSchema)
+export const Comment = models.Comment || model("Comment", commentSchema)
