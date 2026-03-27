@@ -51,7 +51,7 @@ const CommentItem = ({
       <div className="bg-gray-50 p-3 rounded-lg">
         <div className="flex justify-between items-start">
           <span className="font-semibold text-emerald-800 text-sm">
-            {comment.authorId.name}
+            {comment.authorId?.name}
           </span>
           <span className="text-xs text-gray-400">
             {new Date(comment.createdAt).toLocaleDateString()}
@@ -146,7 +146,7 @@ export default function PostDetailsPage() {
           </h1>
           <div className="flex items-center gap-2 mb-6 text-sm text-gray-500 border-b border-gray-100 pb-4">
             <span className="font-medium text-emerald-700">
-              {post.authorId.name}
+              {post.authorId?.name}
             </span>
             <span>•</span>
             <span>{new Date(post.createdAt).toLocaleDateString()}</span>
